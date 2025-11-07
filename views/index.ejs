@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake N' Crumbs Bakery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="order.css">
+</head>
+<body>
+    <!-- Header -->
+     <%- include("_header.ejs") %>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Artisan Baked Goods Made With Love</h1>
+                <p>Discover the perfect blend of traditional recipes and modern flavors in every bite</p>
+                <a href="#featured-products" class="cta-button">Explore Our Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products" id="featured-products">
+        <div class="container">
+            <h2 class="section-title">Our Signature Creations</h2>
+            <p class="section-subtitle">Handcrafted with the finest ingredients for exceptional flavor</p>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1587248720328-4daa08f11b9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80');"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">Sourdough Bread</h3>
+                        <p class="product-desc">Slow-fermented for 24 hours for optimal flavor and texture</p>
+                        <p class="product-price">Ksh 700</p>
+                        <a href="#" class="cta-button">Add to Cart</a>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1559620192-032c4bc4674e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=692&q=80');"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">Chocolate Croissant</h3>
+                        <p class="product-desc">Flaky pastry with premium Belgian chocolate filling</p>
+                        <p class="product-price">Ksh 450</p>
+                        <a href="#" class="cta-button">Add to Cart</a>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1612203985729-70726954388c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80');"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">Berry Tart</h3>
+                        <p class="product-desc">Buttery shortcrust filled with vanilla custard and fresh berries</p>
+                        <p class="product-price">Ksh 675</p>
+                        <a href="#" class="cta-button">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Our Story</h2>
+                    <p>Founded in 2010, Sweet Delights Bakery began as a small family operation with a passion for traditional baking methods and quality ingredients.</p>
+                    <p>Today, we still uphold those values, crafting each product with care and attention to detail. Our master bakers combine time-honored techniques with innovative flavors to create unforgettable baked goods.</p>
+                    <p>We source locally whenever possible, supporting our community and reducing our environmental footprint while delivering the freshest products to our customers.</p>
+                    <a href="#" class="cta-button">Learn More About Us</a>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1608190003443-86a6a5c5f3f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Baker preparing dough">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <p class="section-subtitle">Don't just take our word for it - hear from our satisfied customers</p>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">The sourdough bread from Sweet Delights is the best I've ever had. It's become a staple in our household - we can't start our day without it!</p>
+                    <div class="testimonial-author">
+                        <div class="author-img" style="background-image: url('https://randomuser.me/api/portraits/women/65.jpg');"></div>
+                        <div>
+                            <h4>Sarah Johnson</h4>
+                            <p>Regular Customer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">I ordered a custom birthday cake for my daughter's party, and it was both beautiful and delicious. The attention to detail was exceptional.</p>
+                    <div class="testimonial-author">
+                        <div class="author-img" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg');"></div>
+                        <div>
+                            <h4>Michael Thompson</h4>
+                            <p>Customer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">As a coffee shop owner, I've been sourcing pastries from Sweet Delights for over a year. My customers consistently praise the quality and flavor.</p>
+                    <div class="testimonial-author">
+                        <div class="author-img" style="background-image: url('https://randomuser.me/api/portraits/women/44.jpg');"></div>
+                        <div>
+                            <h4>Emily Rodriguez</h4>
+                            <p>Local Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Process -->
+    <section class="order">
+        <div class="container">
+            <h2 class="section-title">How To Order</h2>
+            <p class="section-subtitle">Getting your favorite baked goods is simple and convenient</p>
+            
+            <div class="order-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Browse Our Selection</h3>
+                    <p>Explore our menu of artisan breads, pastries, cakes, and custom creations</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Place Your Order</h3>
+                    <p>Select items, choose pickup or delivery time, and complete your purchase</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy Freshness</h3>
+                    <p>Pick up your order or have it delivered - always fresh and delicious</p>
+                </div>
+            </div>
+            
+            <a href="/order" class="cta-button">Start Your Order Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <%- include("_footer.ejs") %>
+
+    <script src="main.js"></script>
+</body>
+</html>

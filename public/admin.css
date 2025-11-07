@@ -1,0 +1,121 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* HEADER */
+.admin-header {
+  background: #222;
+  color: #fff;
+  padding: 15px 0;
+}
+.admin-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.admin-header .logo {
+  font-size: 1.4rem;
+}
+.admin-header .logo span {
+  color: #f9b233;
+}
+.admin-nav ul {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+}
+.admin-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+.admin-nav a.active, .admin-nav a:hover {
+  color: #f9b233;
+}
+
+/* DASHBOARD */
+.dashboard h2 {
+  margin-top: 25px;
+}
+.subtitle {
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.card i {
+  font-size: 2rem;
+  color: #f9b233;
+  margin-bottom: 10px;
+}
+.card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #555;
+}
+.card p {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* TABLE */
+.recent-orders table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.recent-orders th, .recent-orders td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+.recent-orders th {
+  background: #f9b233;
+  color: #fff;
+  font-weight: 600;
+}
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 0.85rem;
+}
+.status.completed { background: #28a745; }
+.status.pending { background: #ffc107; }
+.status.cancelled { background: #dc3545; }
+
+/* FOOTER */
+.admin-footer {
+  text-align: center;
+  padding: 20px 0;
+  background: #222;
+  color: #fff;
+  margin-top: 50px;
+}
+ 

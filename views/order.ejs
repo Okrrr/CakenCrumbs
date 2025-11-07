@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Online | Sweet Delights Bakery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="order.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-bread-slice"></i>
+                    Cake n Crumbs
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="/index" class="active">Home</a></li>
+                        <li><a href="/order" class="active">Order Online</a></li>
+                        <li><a href="/menu">Menu</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Order Online</h1>
+        <p>Browse our delicious selection of freshly baked goods and place your order for pickup or delivery.</p>
+        
+        <div class="order-page">
+            <!-- Products Section -->
+            <div class="products-section">
+                <div class="filters">
+                    <h3>Filter by Category</h3>
+                    <div class="filter-categories">
+                        <button class="filter-btn active" data-category="all">All Items</button>
+                        <button class="filter-btn" data-category="bread">Bread</button>
+                        <button class="filter-btn" data-category="pastries">Pastries</button>
+                        <button class="filter-btn" data-category="cakes">Cakes</button>
+                        <button class="filter-btn" data-category="cookies">Cookies</button>
+                    </div>
+                </div>
+                
+                <h2>Our Bakery Selection</h2>
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2>Your Order</h2>
+                
+                <div class="delivery-options">
+                    <div class="form-group">
+                        <label>Order Type</label>
+                        <div class="option-selector">
+                            <div class="option active" data-type="pickup">Pickup</div>
+                            <div class="option" data-type="delivery">Delivery</div>
+                        </div>
+                    </div>
+                    
+                    <div class="datetime-selector">
+                        <div class="form-group">
+                            <label for="order-date">Pickup/Delivery Date</label>
+                            <input type="date" id="order-date" min="">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="order-time">Time</label>
+                            <select id="order-time">
+                                <option value="">Select a time</option>
+                                <!-- Time slots will be populated by JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cart-items" id="cart-items">
+                    <!-- Cart items will be displayed here -->
+                    <p class="empty-cart-message">Your cart is empty. Add some delicious items!</p>
+                </div>
+                
+                <div class="cart-total">
+                    <div class="total-line">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">Ksh 0.00</span>
+                    </div>
+                    <div class="total-line">
+                        <span>Tax (8%):</span>
+                        <span id="tax">Ksh 0.00</span>
+                    </div>
+                    <div class="total-line" id="delivery-fee-line" style="display: none;">
+                        <span>Delivery Fee:</span>
+                        <span id="delivery-fee">Ksh 3.99</span>
+                    </div>
+                    <div class="total-line final">
+                        <span>Total:</span>
+                        <span id="total">Ksh 0.00</span>
+                    </div>
+                </div>
+                
+                <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2>Complete Your Order</h2>
+            <form id="checkout-form" action="http://localhost:3000/checkout" method="POST">
+                <div class="form-group">
+                    <label for="customer-name">Full Name *</label>
+                    <input type="text" id="customer-name" name="customerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-email">Email *</label>
+                    <input type="email" id="customer-email" name="customerEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-phone">Phone Number *</label>
+                    <input type="tel" id="customer-phone" name="customerPhone" required>
+                </div>
+                
+                <div class="form-group" id="delivery-address-group" style="display: none;">
+                    <label for="delivery-address">Delivery Address</label>
+                    <textarea id="delivery-address" name="deliveryAddress" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="special-instructions">Special Instructions</label>
+                    <textarea id="special-instructions" name="specialInstructions" rows="3" placeholder="Allergies, gift messages, etc."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Create an account for faster checkout next time (optional)</label>
+                    <input type="password" id="customer-password" name="customerPassword" placeholder="Choose a password">
+                </div>
+                
+                <button type="submit" class="checkout-btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include("_footer.ejs") %>
+
+    <script src="order.js"></script>
+</body>
+</html>

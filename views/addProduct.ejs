@@ -1,0 +1,21 @@
+<form action="http://localhost:3000/admin/products" method="POST" enctype="multipart/form-data">
+  <label>Product Name:</label>
+  <input type="text" name="name" required><br>
+
+  <label>Description:</label>
+  <textarea name="description"></textarea><br>
+
+  <label>Price:</label>
+  <input type="number" step="0.01" name="price" required><br>
+
+  <label>Category:</label>
+  <input type="text" name="category"><br>
+
+  <label>Requires Advance (0 or 1):</label>
+  <input type="number" name="requires_advance" value="0"><br>
+
+  <label>Image:</label>
+  <input type="file" name="image" accept="image/*"><br>
+
+  <button type="submit">Add Product</button>
+</form>
