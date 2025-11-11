@@ -283,6 +283,10 @@ app.post('/admin/products', upload.single('image'), (req, res) => {
   );
 });
 
+// about
+app.get('/about', (req, res) => {
+    res.render('about.ejs');
+});
 
 
 app.get("/logout", (req, res) => {
