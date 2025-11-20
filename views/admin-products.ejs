@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Products | Cake N Crumbs</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      background: #fdf8f5;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #b5651d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #f7c5a8;
+      color: #4a2c16;
+    }
+
+    tr:hover {
+      background: #fff5f0;
+    }
+
+    img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 20px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .active {
+      background: #c9f5d6;
+      color: #257a2e;
+    }
+
+    .inactive {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .add-product-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      background: #b5651d;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .add-product-btn:hover {
+      background: #8f4515;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #b5651d;
+    }
+
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    button[type="submit"] {
+      background: #b5651d;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background: #8f4515;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Admin – Product List</h1>
+
+  <button class="add-product-btn" id="openModal">➕ Add Product</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Price (KSh)</th>
+        <th>Advance Notice</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Updated</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if (products.length > 0) { %>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.id %></td>
+
+            <td>
+              <% if (product.image_url) { %>
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" />
+              <% } else { %>
+                <span>No image</span>
+              <% } %>
+            </td>
+
+            <td><%= product.name %></td>
+            <td><%= product.description %></td>
+            <td><%= product.category %></td>
+            <td>KSh <%= product.price.toFixed(2) %></td>
+            <td><%= product.requires_advance_notice %> days</td>
+
+            <td>
+              <% if (product.is_active === 1) { %>
+                <span class="status active">Active</span>
+              <% } else { %>
+                <span class="status inactive">Inactive</span>
+              <% } %>
+            </td>
+
+            <td><%= new Date(product.created_at).toLocaleDateString() %></td>
+            <td><%= new Date(product.updated_at).toLocaleDateString() %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="10" style="text-align:center;">No products found</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <a href="/admin/dashboard" class="add-product-btn">← Back to Dashboard</a>
+
+  <!-- Modal for Add Product -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2>Add New Product</h2>
+      <form action="http://localhost:3000/admin/products" method="POST" enctype="multipart/form-data">
+        <label>Product Name:</label>
+        <input type="text" name="name" required>
+
+        <label>Description:</label>
+        <textarea name="description"></textarea>
+
+        <label>Price:</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Category:</label>
+        <input type="text" name="category">
+
+        <label>Requires Advance (days):</label>
+        <input type="number" name="requires_advance" value="0">
+
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*">
+
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('productModal');
+    const openBtn = document.getElementById('openModal');
+    const closeBtn = document.getElementById('closeModal');
+
+    openBtn.onclick = () => modal.style.display = 'flex';
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  </script>
+</body>
+</html>

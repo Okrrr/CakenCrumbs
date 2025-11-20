@@ -254,6 +254,22 @@ app.get('/admin/dashboard', (req, res) => {
   });
 });
 
+// View all products (Admin)
+app.get('/admin/products', (req, res) => {
+  const query = 'SELECT * FROM products';
+
+  dbConn.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching products:', err);
+      return res.status(500).send('Error loading products');
+    }
+
+    // Render admin-products.ejs (create this file next)
+    res.render('admin-products.ejs', { products: results });
+  });
+});
+
+
 // Add new product (Admin)
 app.post('/admin/products', upload.single('image'), (req, res) => {
   const { name, description, price, category, is_active, requires_advance } = req.body;
@@ -261,7 +277,7 @@ app.post('/admin/products', upload.single('image'), (req, res) => {
 
   const query = `
     INSERT INTO products 
-    (name, description, price, category, is_active, requires_advance, image_url) 
+    (name, description, price, category, is_active, requires_advance_notice, image_url) 
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -286,7 +302,7 @@ app.post('/admin/products', upload.single('image'), (req, res) => {
 // about
 app.get('/about', (req, res) => {
     res.render('about.ejs');
-});
+}); 
 
 
 app.get("/logout", (req, res) => {
