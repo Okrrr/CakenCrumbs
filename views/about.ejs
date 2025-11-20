@@ -4,16 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Cake N Crumbs</title>
+  <link rel="stylesheet" href="/main.css">
   <link rel="stylesheet" href="/about.css">
 </head>
 <body>
-  <header class="hero">
+  <!-- Header -->
+  <%- include("_header.ejs") %>
+
+  <!-- Hero Section -->
+  <section class="hero">
     <div class="overlay"></div>
     <div class="hero-text">
       <h1>My Baking Journey</h1>
       <p>Bringing sweetness and joy to every bite.</p>
     </div>
-  </header>
+  </section>
 
   <section class="about">
     <div class="content">
@@ -37,7 +42,7 @@
       </div>
 
       <div class="image">
-        <img src="images/about-baking.jpg" alt="Baking in the kitchen">
+        <img src="images/owner.jpg" alt="Baking in the kitchen">
       </div>
     </div>
   </section>
@@ -64,8 +69,8 @@
     <h3>Ready to Taste the Sweetness?</h3>
     <p>Explore my menu or order your favorite treat today!</p>
     <div class="buttons">
-      <a href="products.html" class="btn">View Products</a>
-      <a href="contact.html" class="btn btn-outline">Contact Me</a>
+      <a href="/products" class="btn">View Products</a>
+      <a href="/contact" class="btn btn-outline">Contact Us</a>
     </div>
   </section>
 

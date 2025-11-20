@@ -304,6 +304,21 @@ app.get('/about', (req, res) => {
     res.render('about.ejs');
 }); 
 
+// products
+app.get('/products', (req, res) => {
+  const sql = "SELECT * FROM products"; // assumes your table is called 'products'
+
+  dbConn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching products:", err);
+      return res.status(500).send("Error fetching products from database");
+    }
+
+    // Pass results to EJS
+    res.render('products.ejs', { products: results });
+  });
+});
+
 
 app.get("/logout", (req, res) => {
   req.session.destroy((err) => {
