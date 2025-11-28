@@ -162,6 +162,8 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-top: 50px;
+            align-items: center;
+            justify-content: center;
         }
         
         .product-card {

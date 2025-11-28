@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details | Cake n Crumbs</title>
+    <link rel="stylesheet" href="/admin.css">
+    <link rel="stylesheet" href="/orderDetails.css">
+</head>
+<body>
+<%- include("_adminHeader.ejs") %>
+
+<div class="container">
+    <h2>Order #<%= String(order.id).padStart(5, '0') %></h2>
+    <p><strong>Customer:</strong> <%= order.customer_name %></p>
+    <p><strong>Total:</strong> Ksh <%= order.total_price.toFixed(2) %></p>
+    <p><strong>Status:</strong>
+        <span class="status-badge <%= order.status.replace(/\s+/g, '-').toLowerCase() %>">
+            <%= order.status %>
+        </span>
+    </p>
+    <form action="/admin/orders/<%= order.id %>/status" method="POST" class="status-form">
+    <label>Change Status:</label>
+        <select name="status" class="status-select">
+            <option value="Pending" <%= order.status === "Pending" ? "selected" : "" %>>Pending</option>
+            <option value="Received" <%= order.status === "Received" ? "selected" : "" %>>Received</option>
+            <option value="Preparing" <%= order.status === "Preparing" ? "selected" : "" %>>Preparing</option>
+            <option value="Ready for Pickup" <%= order.status === "Ready for Pickup" ? "selected" : "" %>>Ready for Pickup</option>
+            <option value="Completed" <%= order.status === "Completed" ? "selected" : "" %>>Completed</option>
+            <option value="Cancelled" <%= order.status === "Cancelled" ? "selected" : "" %>>Cancelled</option>
+        </select>
+
+        <button type="submit" class="btn update-btn">Update Status</button>
+
+        <% if (updated) { %>
+            <p class="success-msg">✔ Status updated successfully!</p>
+        <% } %>
+    </form>
+
+
+    <p><strong>Date:</strong> <%= new Date(order.order_date).toLocaleString() %></p>
+
+    <h3>Items</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% items.forEach(item => { %>
+                <tr>
+                    <td><%= item.product_name %></td>
+                    <td><%= item.quantity %></td>
+                    <td>Ksh <%= item.price %></td>
+                    <td>Ksh <%= (item.quantity * item.price).toFixed(2) %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <a href="/admin/dashboard" class="btn">Back to Dashboard</a>
+</div>
+
+<%- include("_adminFooter.ejs") %>
+</body>
+</html>

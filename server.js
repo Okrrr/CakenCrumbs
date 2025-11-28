@@ -254,7 +254,7 @@ app.get('/admin/dashboard', (req, res) => {
   });
 });
 
-// View all products (Admin)
+
 app.get('/admin/products', (req, res) => {
   const query = 'SELECT * FROM products';
 
@@ -263,8 +263,6 @@ app.get('/admin/products', (req, res) => {
       console.error('Error fetching products:', err);
       return res.status(500).send('Error loading products');
     }
-
-    // Render admin-products.ejs (create this file next)
     res.render('admin-products.ejs', { products: results });
   });
 });
@@ -299,6 +297,69 @@ app.post('/admin/products', upload.single('image'), (req, res) => {
   );
 });
 
+app.get('/admin/orders/:id', (req, res) => {
+    const orderId = req.params.id;
+    const updated = req.query.updated === "true";
+
+    const orderQuery = `
+      SELECT orders.*, customers.name AS customer_name
+      FROM orders
+      JOIN customers ON orders.customer_id = customers.id
+      WHERE orders.id = ?
+    `;
+
+    const itemsQuery = `
+      SELECT 
+        order_items.quantity,
+        order_items.unit_price AS price,
+        order_items.line_total AS subtotal,
+        products.name AS product_name
+      FROM order_items
+      JOIN products ON order_items.product_id = products.id
+      WHERE order_items.order_id = ?
+    `;
+
+    dbConn.query(orderQuery, [orderId], (err, orderResult) => {
+        if (err) throw err;
+
+        if (orderResult.length === 0) {
+            return res.render("orderDetails.ejs", {
+                order: null,
+                items: [],
+                error: "Order not found",
+                updated: false
+            });
+        }
+
+        const orderData = orderResult[0];
+
+        dbConn.query(itemsQuery, [orderId], (err, itemsResult) => {
+            if (err) throw err;
+
+            res.render("orderDetails.ejs", {
+                order: orderData,
+                items: itemsResult,
+                error: null,
+                updated: updated
+            });
+        });
+    });
+});
+
+
+app.post('/admin/orders/:id/status', (req, res) => {
+    const orderId = req.params.id;
+    const newStatus = req.body.status;
+
+    const sql = "UPDATE orders SET status = ? WHERE id = ?";
+    dbConn.query(sql, [newStatus, orderId], (err) => {
+        if (err) throw err;
+        res.redirect(`/admin/orders/${orderId}?updated=true`);
+    });
+});
+
+
+
 // about
 app.get('/about', (req, res) => {
     res.render('about.ejs');
@@ -306,15 +367,13 @@ app.get('/about', (req, res) => {
 
 // products
 app.get('/products', (req, res) => {
-  const sql = "SELECT * FROM products"; // assumes your table is called 'products'
+  const sql = "SELECT * FROM products";
 
   dbConn.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching products:", err);
       return res.status(500).send("Error fetching products from database");
     }
-
-    // Pass results to EJS
     res.render('products.ejs', { products: results });
   });
 });
