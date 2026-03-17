@@ -6,10 +6,13 @@ body {
   color: #333;
 }
 
-.container {
-  width: 90%;
+.admin-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 90%; */
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 /* HEADER */
@@ -17,23 +20,30 @@ body {
   background: #222;
   color: #fff;
   padding: 15px 0;
+  width: 100%;
 }
 .admin-header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .admin-header .logo {
   font-size: 1.4rem;
 }
+
 .admin-header .logo span {
   color: #f9b233;
 }
+
 .admin-nav ul {
   display: flex;
   gap: 25px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
+
 .admin-nav a {
   color: #fff;
   text-decoration: none;
@@ -119,3 +129,57 @@ body {
   margin-top: 50px;
 }
  
+.product-actions {
+    position: relative;
+}
+
+.dots-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.dropdown-content a,
+.dropdown-content button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background: none;
+    border: none;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.delete-btn {
+    color: red;
+}
+

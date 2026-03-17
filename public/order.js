@@ -357,17 +357,18 @@ function processOrder() {
   const time = document.getElementById('order-time').value;
 
   const orderData = {
-    name,
-    email,
-    phone,
-    address,
-    instructions,
-    password,
-    orderType,
-    date,
-    time,
-    items: cart,
-  };
+  customerName: name,
+  customerEmail: email,
+  customerPhone: phone,
+  deliveryAddress: address,
+  specialInstructions: instructions,
+  customerPassword: password,
+  orderType,
+  date,
+  time,
+  items: cart,
+};
+
 
   fetch('/checkout', {
     method: 'POST',

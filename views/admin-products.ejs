@@ -4,10 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Products | Cake N Crumbs</title>
-  <link rel="stylesheet" href="/admin.css" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Your CSS -->
   <link rel="stylesheet" href="/adminProducts.css" />
 </head>
 <body>
+
   <h1>Admin – Product List</h1>
 
   <button class="add-product-btn" id="openModal">➕ Add Product</button>
@@ -25,6 +33,7 @@
         <th>Status</th>
         <th>Created</th>
         <th>Updated</th>
+        <th>Actions</th>
       </tr>
     </thead>
 
@@ -58,22 +67,46 @@
 
             <td><%= new Date(product.created_at).toLocaleDateString() %></td>
             <td><%= new Date(product.updated_at).toLocaleDateString() %></td>
+
+            <!-- ACTIONS COLUMN -->
+            <td class="actions">
+              <button class="dots-btn" onclick="toggleDropdown(this)">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+
+              <div class="dropdown-content">
+                <a href="/admin/products/<%= product.id %>/edit">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+
+                <form action="/admin/products/<%= product.id %>/delete" method="POST"
+                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                  <button type="submit">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+
           </tr>
         <% }) %>
       <% } else { %>
-        <tr><td colspan="10" style="text-align:center;">No products found</td></tr>
+        <tr>
+          <td colspan="11" style="text-align:center;">No products found</td>
+        </tr>
       <% } %>
     </tbody>
   </table>
 
   <a href="/admin/dashboard" class="add-product-btn">← Back to Dashboard</a>
 
-  <!-- Modal for Add Product -->
+  <!-- Modal -->
   <div class="modal" id="productModal">
     <div class="modal-content">
       <span class="close-modal" id="closeModal">&times;</span>
       <h2>Add New Product</h2>
-      <form action="http://localhost:3000/admin/products" method="POST" enctype="multipart/form-data">
+
+      <form action="/admin/products" method="POST" enctype="multipart/form-data">
         <label>Product Name:</label>
         <input type="text" name="name" required>
 
@@ -87,7 +120,7 @@
         <input type="text" name="category">
 
         <label>Requires Advance (days):</label>
-        <input type="number" name="requires_advance" value="0">
+        <input type="number" name="requires_advance_notice" value="0">
 
         <label>Image:</label>
         <input type="file" name="image" accept="image/*">
@@ -105,6 +138,28 @@
     openBtn.onclick = () => modal.style.display = 'flex';
     closeBtn.onclick = () => modal.style.display = 'none';
     window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+    function toggleDropdown(button) {
+      const dropdown = button.nextElementSibling;
+
+      document.querySelectorAll('.dropdown-content').forEach(menu => {
+        if (menu !== dropdown) {
+          menu.style.display = 'none';
+        }
+      });
+
+      dropdown.style.display =
+        dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.actions')) {
+        document.querySelectorAll('.dropdown-content').forEach(menu => {
+          menu.style.display = 'none';
+        });
+      }
+    });
   </script>
+
 </body>
 </html>

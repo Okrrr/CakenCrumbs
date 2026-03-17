@@ -27,8 +27,23 @@ app.use(session({
 
 //index route
 app.get('/', (req, res) => {
-    res.render('index.ejs');
+  const sql = `
+    SELECT * FROM products
+    WHERE is_active = 1
+    ORDER BY RAND()
+    LIMIT 6
+  `;
+
+  dbConn.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching featured products:", err);
+      return res.render('index.ejs', { products: [] });
+    }
+
+    res.render('index.ejs', { products: results });
+  });
 });
+
 
 app.get('/order', (req, res) => {
     res.render('order.ejs');
@@ -55,18 +70,26 @@ app.get("/login", (req, res) => {
 
 app.post('/checkout', (req, res) => {
   const {
-    name,
-    email,
-    phone,
-    instructions,
-    password,
+    customerName,
+    customerEmail,
+    customerPhone,
+    specialInstructions,
+    customerPassword,
     orderType,
     date,
     time,
     items
   } = req.body;
 
-  if (!name || !email || !phone || !orderType || !date || !time || !items || items.length === 0) {
+  const nameParts = customerName.trim().split(' ');
+  const first_name = nameParts[0];
+  const last_name = nameParts.slice(1).join(' ') || '';
+  const email = customerEmail;
+  const phone = customerPhone;
+  const instructions = specialInstructions;
+  const password = customerPassword;
+
+  if (!first_name || !last_name || !email || !phone || !orderType || !date || !time || !items || items.length === 0) {
     return res.status(400).json({ message: 'Missing required fields or empty cart.' });
   }
 
@@ -90,10 +113,10 @@ app.post('/checkout', (req, res) => {
       }
 
       const insertCustomer = `
-        INSERT INTO customers (name, email, phone)
-        VALUES (?, ?, ?)
+        INSERT INTO customers (first_name, last_name, email, phone)
+        VALUES (?, ?, ?, ?)
       `;
-      dbConn.query(insertCustomer, [name, email, phone], (err, result) => {
+      dbConn.query(insertCustomer, [first_name, last_name, email, phone], (err, result) => {
         if (err) {
           console.error('Error creating customer:', err);
           return res.status(500).json({ message: 'Error creating new customer.' });
@@ -144,7 +167,7 @@ app.post('/checkout', (req, res) => {
     if (!items || items.length === 0) return;
 
     const insertItems = `
-      INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total )
+      INSERT INTO order_items (order_id, product_id, quantity, unit_price, total )
       VALUES ?
     `;
 
@@ -198,7 +221,7 @@ app.get('/admin/dashboard', (req, res) => {
   SELECT 
     o.id,
     o.order_number,
-    c.name AS customer_name,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
     c.email AS customer_email,
     o.total_price,
     o.order_date
@@ -297,12 +320,89 @@ app.post('/admin/products', upload.single('image'), (req, res) => {
   );
 });
 
+// Render Edit Product form
+app.get('/admin/products/:id/edit', (req, res) => {
+    const productId = req.params.id;
+
+    const query = 'SELECT * FROM products WHERE id = ?';
+    dbConn.query(query, [productId], (err, results) => {
+        if (err) {
+            console.error('Error fetching product:', err);
+            return res.status(500).send('Database error');
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send('Product not found');
+        }
+
+        const product = results[0];
+        res.render('editProduct.ejs', { product });
+    });
+});
+
+
+// Handle Edit Product
+app.post('/admin/products/:id/edit', upload.single('image'), (req, res) => {
+  const productId = req.params.id;
+  const { name, description, price, category, requires_advance_notice } = req.body;
+
+  // Base values for the query
+  let values = [name, description, price, category, requires_advance_notice];
+  let imageQueryPart = '';
+
+  // If a new image is uploaded, include it in the query
+  if (req.file) {
+    imageQueryPart = ', image_url = ?';
+    values.push(`/images/${req.file.filename}`);
+  }
+
+  // Add the productId to the values array for the WHERE clause
+  values.push(productId);
+
+  // Build the final query
+  const query = `
+    UPDATE products
+    SET name = ?, description = ?, price = ?, category = ?, requires_advance_notice = ?
+    ${imageQueryPart}
+    WHERE id = ?
+  `;
+
+  dbConn.query(query, values, (err) => {
+    if (err) {
+      console.error('Error updating product:', err);
+      return res.status(500).send("Error updating product");
+    }
+    res.redirect('/admin/products');
+  });
+});
+
+
+app.post('/admin/products/:id/delete', (req, res) => {
+  const productId = req.params.id;
+
+  const sql = "DELETE FROM products WHERE id = ?";
+
+  dbConn.query(sql, [productId], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error deleting product");
+    }
+
+    res.redirect('/admin/products');
+  });
+});
+
+
+
 app.get('/admin/orders/:id', (req, res) => {
     const orderId = req.params.id;
     const updated = req.query.updated === "true";
 
     const orderQuery = `
-      SELECT orders.*, customers.name AS customer_name
+      SELECT orders.*,
+      CONCAT(customers.first_name, ' ', customers.last_name) AS customer_name,
+      customers.email AS customer_email,
+      customers.phone AS customer_phone
       FROM orders
       JOIN customers ON orders.customer_id = customers.id
       WHERE orders.id = ?
@@ -312,7 +412,7 @@ app.get('/admin/orders/:id', (req, res) => {
       SELECT 
         order_items.quantity,
         order_items.unit_price AS price,
-        order_items.line_total AS subtotal,
+        order_items.total AS subtotal,
         products.name AS product_name
       FROM order_items
       JOIN products ON order_items.product_id = products.id
