@@ -6,18 +6,38 @@ const multer = require('multer');
 const upload = multer({ dest: 'public/images/' });
 const app = express();
 const mysql = require('mysql');
+
+const bcrypt = require('bcrypt');
+const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
+const salt = bcrypt.genSaltSync(saltRounds);
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const sessionStore = new MySQLStore({}, dbConn);
+
+app.use(session({
+    key: 'cakencrumbs_session',
+    secret: process.env.SESSION_SECRET,
+    store: sessionStore, // sessions now stay in the DB!
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: true, // set to true if using HTTPS
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+      }
+}));
 const dbConn = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 18330,
+    ssl: {
+        rejectUnauthorized: true
+    },
     waitForConnections: true,
-    queueLimit: 10
+    queueLimit: 0
 });
-
-const bcrypt = require('bcrypt');
-const salt = bcrypt.genSaltSync(13);
-const session = require('express-session');
 
 //middleware
 app.use(express.static(path.join(__dirname, 'public'))); // to static files from public folder
@@ -27,6 +47,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    store: sessionStore
 }));
 
 //index route
@@ -494,7 +515,13 @@ app.get("/logout", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// 1. Export the app (This is what Vercel looks for)
+module.exports = app;
+
+// 2. Only run app.listen if we are NOT on Vercel
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
