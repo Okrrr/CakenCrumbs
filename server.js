@@ -3,33 +3,34 @@ dotenv.config();
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
+const mysql = require('mysql');
 // Replace your old multer line with this:
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const app = express();
-const mysql = require('mysql');
 
 const bcrypt = require('bcrypt');
 const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const sessionStore = new MySQLStore({}, dbConn);
 
 const dbConn = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 18330,
-    ssl: {
-        rejectUnauthorized: false
-    },
-    waitForConnections: true,
-    queueLimit: 0
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 18330,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  waitForConnections: true,
+  queueLimit: 0
 });
 
-app.use(session({
+const sessionStore = new MySQLStore({}, dbConn);
+
+app.use(session({ 
     key: 'cakencrumbs_session',
     secret: process.env.SESSION_SECRET,
     store: sessionStore, // sessions now stay in the DB!
@@ -46,12 +47,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public'))); // to static files from public folder
 app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(express.json()); //to parse json data
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore
-}));
+
 
 //index route
 app.get('/', (req, res) => {
