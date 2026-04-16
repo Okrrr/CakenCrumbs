@@ -16,18 +16,6 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const sessionStore = new MySQLStore({}, dbConn);
 
-app.use(session({
-    key: 'cakencrumbs_session',
-    secret: process.env.SESSION_SECRET,
-    store: sessionStore, // sessions now stay in the DB!
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-      secure: true, // set to true if using HTTPS
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
-      }
-}));
 const dbConn = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -40,6 +28,19 @@ const dbConn = mysql.createPool({
     waitForConnections: true,
     queueLimit: 0
 });
+
+app.use(session({
+    key: 'cakencrumbs_session',
+    secret: process.env.SESSION_SECRET,
+    store: sessionStore, // sessions now stay in the DB!
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: true, // set to true if using HTTPS
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+      }
+}));
 
 //middleware
 app.use(express.static(path.join(__dirname, 'public'))); // to static files from public folder
