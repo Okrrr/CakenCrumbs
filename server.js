@@ -1,14 +1,17 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'public/images/' });
 const app = express();
 const mysql = require('mysql');
-const dbConn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Korir@01',
-    database: 'bakery_management',
+const dbConn = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    queueLimit: 10
 });
 
 const bcrypt = require('bcrypt');
@@ -16,11 +19,11 @@ const salt = bcrypt.genSaltSync(13);
 const session = require('express-session');
 
 //middleware
-app.use(express.static(path.join(__dirname, 'public'))); //static files will be served from public folder
+app.use(express.static(path.join(__dirname, 'public'))); // to static files from public folder
 app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(express.json()); //to parse json data
 app.use(session({
-    secret: 'kipngetich_soymining',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
 }));
@@ -191,8 +194,8 @@ app.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
 
   // Simple authentication example (replace with DB check later)
-  const ADMIN_EMAIL = 'admin@cakencrumbs.com';
-  const ADMIN_PASSWORD = 'bakery123';
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
     // You could use session or JWT later for actual login
@@ -490,7 +493,7 @@ app.get("/logout", (req, res) => {
   });
 });
 
-
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
