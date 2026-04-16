@@ -3,7 +3,9 @@ dotenv.config();
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const upload = multer({ dest: 'public/images/' });
+// Replace your old multer line with this:
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const app = express();
 const mysql = require('mysql');
 
@@ -33,7 +35,7 @@ const dbConn = mysql.createPool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT || 18330,
     ssl: {
-        rejectUnauthorized: true
+        rejectUnauthorized: false
     },
     waitForConnections: true,
     queueLimit: 0
