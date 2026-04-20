@@ -3,7 +3,7 @@ dotenv.config();
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 // Replace your old multer line with this:
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -43,7 +43,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { 
-      secure: true, // set to true if using HTTPS
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 // 1 day
       }
